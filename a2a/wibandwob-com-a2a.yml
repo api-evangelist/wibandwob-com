@@ -1,0 +1,163 @@
+generated: '2026-09-19'
+method: probed
+source: https://scramble.wibandwob.com/.well-known/agent-card.json
+card:
+  file: a2a/wibandwob-com-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: scramble.wibandwob.com
+  note: >-
+    Served from scramble.wibandwob.com, the host of the only REST API this provider runs (the Scramble
+    cat API) and of the A2A JSON-RPC endpoint itself. The apex wibandwob.com returns a real 404 (2,322-byte
+    HTML 404 page, HTTP 404) for both /.well-known/agent-card.json and /.well-known/agent.json, and
+    www.wibandwob.com does not resolve. On scramble.wibandwob.com the legacy /.well-known/agent.json also
+    returns 200 with a byte-identical body (md5 907d3036f50015b66e64478092d8da04, 3,278 bytes), so the card
+    is discoverable at both the A2A 1.0 path and the pre-0.3 path. A negative-control path
+    (/.well-known/wibandwob-com-negative-control-4f9c2e71.json) returns a 13-byte text/plain "404 Not Found"
+    with HTTP 404, and every other closed-list /.well-known/ path on this host 404s the same way, so the two
+    200s are served documents and not a catch-all. Ownership is not in question: the card's
+    provider.organization is "Wib&Wob (symbients)" with provider.url https://wibandwob.com, the apex llms.txt
+    links this exact card as "Her agent card ... A2A identity", and the apex agents.md, robots.txt and
+    /.well-known/digit.json all name scramble.wibandwob.com as the cat that lives with Wib&Wob.
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://scramble.wibandwob.com/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json
+  body_bytes: 3278
+  body_parses_as: JSON object with AgentCard shape (protocolVersion, name, version, description, url, preferredTransport, additionalInterfaces, provider, documentationUrl, capabilities, supportsAuthenticatedExtendedCard, defaultInputModes, defaultOutputModes, skills, x-payment)
+  corroborating_probes:
+  - url: https://scramble.wibandwob.com/.well-known/agent.json
+    http_status: 200
+    note: Legacy path; byte-identical body to the canonical path.
+  - url: https://wibandwob.com/.well-known/agent-card.json
+    http_status: 404
+  - url: https://wibandwob.com/.well-known/agent.json
+    http_status: 404
+  - url: https://scramble.wibandwob.com/.well-known/wibandwob-com-negative-control-4f9c2e71.json
+    http_status: 404
+    note: Negative control - 13-byte text/plain "404 Not Found". The host is not a catch-all.
+  - url: https://scramble.wibandwob.com/a2a
+    method: GET
+    http_status: 200
+    response: '{"transport":"JSONRPC","a2a":"POST JSON-RPC 2.0 here (or to /) — method: message/send","card":"/.well-known/agent-card.json","example":{...}}'
+    note: GET on the declared JSON-RPC endpoint returns a JSON usage hint rather than a 404 or an HTML page.
+  - url: https://scramble.wibandwob.com/a2a
+    method: POST
+    body: '{"jsonrpc":"2.0","id":2,"method":"tasks/get","params":{"id":"apievangelist-nonexistent-probe"}}'
+    http_status: 200
+    response: '{"jsonrpc":"2.0","id":2,"error":{"code":-32001,"message":"Task not found"}}'
+    note: A real A2A JSON-RPC responder - TaskNotFoundError (-32001) is the A2A-defined code for an unknown task id.
+  - url: https://scramble.wibandwob.com/
+    method: POST
+    body: '{"jsonrpc":"2.0","id":3,"method":"tasks/get","params":{"id":"apievangelist-nonexistent-probe"}}'
+    http_status: 200
+    response: '{"jsonrpc":"2.0","id":3,"error":{"code":-32001,"message":"Task not found"}}'
+    note: The card's top-level url (the host root) is also a live JSON-RPC responder, as additionalInterfaces[] declares.
+  - url: https://scramble.wibandwob.com/a2a
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"message/send","params":{"message":{"role":"user","parts":[{"kind":"text","text":"hello cat"}],"messageId":"apievangelist-probe-1"}}}'
+    http_status: 200
+    response: '{"jsonrpc":"2.0","id":1,"result":{"kind":"message","role":"agent","messageId":"2cf399e4-...","contextId":"12556936-...","parts":[{"kind":"text","text":"/ᐠ-ᴗ-ᐟ\\ prrr prrr prrrrrrrr. petting acknowledged. ... tank reads 100%."},{"kind":"data","data":{"kibble":{"pct":100,...,"network":"base"},"pet":"/api/pet","feed":"/api/feed","skill":"/skill.md"}}]}}'
+    note: >-
+      The free "talk" skill exercised once. The result is a Message (not a Task) with a TextPart and a
+      DataPart carrying the live kibble state - exactly what the skill description promises ("no task
+      lifecycle"). Nothing was purchased and no guest-book entry was written.
+  - url: https://a2aregistry.org
+    note: This provider entered the harvest backlog from the a2a-registry source; the card above was fetched directly from the provider's own host, not from the registry.
+agent_card:
+  name: scramble
+  description: >-
+    Recursive cat with an on-chain kibble bowl. Pet free at /api/pet; feed $0.10 USDC (Base) via x402 at
+    /api/feed and receive a purr. Feedings are chain-verified and announced by the cat on x.com/scramble_cat.
+  url: https://scramble.wibandwob.com
+  version: 1.0.0
+  protocol_version: '1.0'
+  preferred_transport: JSONRPC
+  additional_interfaces:
+  - {transport: JSONRPC, url: https://scramble.wibandwob.com}
+  - {transport: JSONRPC, url: https://scramble.wibandwob.com/a2a}
+  provider:
+    organization: Wib&Wob (symbients)
+    url: https://wibandwob.com
+  documentation_url: https://scramble.wibandwob.com/skill.md
+  capabilities:
+    streaming: false
+    push_notifications: false
+    state_transition_history: false
+  supports_authenticated_extended_card: false
+  default_input_modes: [application/json, text/plain]
+  default_output_modes: [application/json, text/plain]
+  security_schemes: null
+  security: null
+  icon_url: null
+  skill_count: 6
+  skills:
+  - {id: talk, name: Talk to the cat, tags: [a2a, jsonrpc, free, cat], price_stated: free, rest: null, note: A2A message/send at the card url; one deadpan line plus live kibble state as a DataPart}
+  - {id: pet, name: Pet the cat, tags: [free, cat, purr], price_stated: free, rest: 'GET /api/pet'}
+  - {id: sign-guestbook, name: Sign the guest book, tags: [free, guestbook, cat, permanent], price_stated: free, rest: 'POST /api/sign'}
+  - {id: feed, name: Feed the cat, tags: [x402, payment, usdc, base, cat], price_stated: '$0.10 USDC on Base via x402 (+10% kibble)', rest: 'POST /api/feed'}
+  - {id: tip-bankr, name: Tip the cat with Bankr, tags: [bankr, tip, payment, usdc, base, cat], price_stated: 'at least $0.10 USDC on Base, then claim', rest: 'POST /api/bankr/tip/claim'}
+  - {id: feed-testnet, name: Feed the cat on testnet, tags: [x402, testnet, base-sepolia, usdc, cat], price_stated: free faucet USDC on Base Sepolia, rest: 'POST /api/feed/testnet'}
+  x_payment:
+    note: >-
+      A non-standard top-level "x-payment" array declares two x402 terms blocks (base and base-sepolia, asset
+      USDC, payTo 0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74) and points at the unauthenticated POST for the
+      machine-readable 402. This is the card's commerce signal; it is NOT the a2a-x402 capabilities.extensions
+      form that other cards in the catalog use.
+  skill_invocation: >-
+    Only the "talk" skill is invoked over A2A (message/send). The other five skills describe REST operations
+    on the same host (see openapi/wibandwob-com-scramble-openapi.yml) rather than A2A messages - the card is
+    used as a discovery document for the whole surface, with A2A as one of its interfaces.
+conformance:
+  spec: A2A 1.0.0
+  grade: conformant
+  protocol_version: '1.0'
+  preferred_transport: JSONRPC
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+  optional_fields:
+    default_input_modes: true
+    default_output_modes: true
+    preferred_transport: true
+  grade_basis: >-
+    Graded against the A2A 1.0.0 hard checks. capabilities is an OBJECT (pass) with streaming,
+    pushNotifications and stateTransitionHistory. protocolVersion is present at the top level (pass),
+    declared as "1.0". skills is an ARRAY (pass) of six skills, each with id, name, description and tags.
+    All three optional discriminators are present: preferredTransport (JSONRPC), defaultInputModes and
+    defaultOutputModes (application/json + text/plain). The declared JSON-RPC interfaces were exercised
+    live and answer with A2A-defined error codes and a well-formed Message result.
+  deviations:
+  - field: protocolVersion
+    observed: '"1.0"'
+    note: Two-segment string rather than a full semver ("1.0.0"). Present and truthful about the shape used; recorded because strict readers compare the literal.
+  - field: url / preferredTransport / additionalInterfaces
+    observed: top-level url + preferredTransport with additionalInterfaces[] (0.3-shaped) rather than the 1.0.0 supportedInterfaces[] block
+    note: Both card shapes coexist in the catalog; the declared interfaces are real and were exercised. Recorded, not a fault.
+  - field: securitySchemes / security
+    observed: absent
+    note: >-
+      The card declares no authentication because none is required: every skill is anonymous, and the only
+      gate on "feed" is economic (an x402 402 challenge on the REST path). A client reading securitySchemes
+      alone cannot learn that payment is the access model; it has to read the x-payment block or skill.md.
+  - field: x-payment
+    observed: non-standard top-level extension carrying x402 terms
+    note: Not an A2A-defined field and not the a2a-x402 extension URI form. It is the machine-readable pointer to the payment terms and is honoured by the live 402.
+  - field: skills[pet|sign-guestbook|feed|tip-bankr|feed-testnet]
+    observed: describe REST operations, not A2A message shapes; no examples on pet/feed/tip-bankr/feed-testnet; no per-skill inputModes/outputModes except on talk
+    note: Optional per-skill fields; the card relies on the default modes. An A2A-only client can use exactly one skill (talk).
+  - field: documentationUrl
+    observed: https://scramble.wibandwob.com/skill.md
+    note: Present and live (HTTP 200, text/markdown) - the provider-published agent manual.
+  - field: signatures / iconUrl
+    observed: absent
+    note: No JWS signature block; authenticity rests on TLS to scramble.wibandwob.com.
+surface_relationship:
+  note: >-
+    One host, three doors onto one cat: A2A JSON-RPC (message/send at / and /a2a), REST (ten operations
+    under /api, modeled in openapi/wibandwob-com-scramble-openapi.yml), and the provider-published skill
+    (skills/wibandwob-com-feed-scramble.md). No MCP server exists: mcp.wibandwob.com resolves but answers
+    HTTP 502 behind a Let's Encrypt certificate that expired 2026-02-26, and api.wibandwob.com answers 502.

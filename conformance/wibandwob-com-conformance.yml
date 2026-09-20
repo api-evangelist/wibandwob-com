@@ -1,0 +1,87 @@
+generated: '2026-09-19'
+method: probed
+source:
+- https://scramble.wibandwob.com/.well-known/agent-card.json
+- https://scramble.wibandwob.com/api/feed (POST, unauthenticated - HTTP 402)
+- https://scramble.wibandwob.com/api/terms
+- https://scramble.wibandwob.com/a2a (POST JSON-RPC)
+- https://wibandwob.com/.well-known/digit.json
+- https://wibandwob.com/llms.txt
+- https://scramble.wibandwob.com/robots.txt
+note: >-
+  Every "conforms: true" below was observed on the wire or read from a machine-readable document the
+  provider serves; nothing is inferred from marketing prose. The provider publishes no certifications or
+  compliance program, so NO Compliance pointer is emitted.
+standards:
+- id: a2a-1.0
+  conforms: true
+  grade: conformant
+  evidence: >-
+    Agent card at https://scramble.wibandwob.com/.well-known/agent-card.json declares protocolVersion "1.0";
+    capabilities is an object, skills is an array of six; JSON-RPC message/send returned a well-formed Message
+    and tasks/get on an unknown id returned A2A error -32001. Graded in a2a/wibandwob-com-a2a.yml.
+- id: jsonrpc-2.0
+  conforms: true
+  evidence: 'POST / and POST /a2a on scramble.wibandwob.com answer JSON-RPC 2.0 envelopes with matching id; unknown task -> {"error":{"code":-32001,"message":"Task not found"}}.'
+- id: x402-v1
+  conforms: true
+  evidence: >-
+    POST https://scramble.wibandwob.com/api/feed with no X-PAYMENT header returned HTTP 402 application/json
+    with {"x402Version":1,"accepts":[{"scheme":"exact","network":"base","maxAmountRequired":"100000",
+    "asset":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913","payTo":"0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74",
+    "maxTimeoutSeconds":300}]} and the same terms base64-encoded in a PAYMENT-REQUIRED response header;
+    access-control-expose-headers lists X-PAYMENT-RESPONSE and PAYMENT-REQUIRED. POST /api/feed/testnet
+    returned the base-sepolia variant. Observed 2026-09-19. (The Kin Score has no x402 check by design; recorded as measurement.)
+- id: eip-3009
+  conforms: true
+  basis: stated
+  evidence: skill.md section 2 and GET /api/terms idempotency.feed - "Sign an EIP-3009 transferWithAuthorization with YOUR key"; the authorization nonce is the idempotency key. Not exercised (would move real money).
+- id: did-web
+  conforms: true
+  evidence: https://wibandwob.com/.well-known/digit.json symbient.id = did:web:wibandwob.com:wibwob; wibwobworld.yaml symbient = the same DID.
+- id: llms-txt
+  conforms: true
+  evidence: https://wibandwob.com/llms.txt (200, text/plain, H1 + blockquote + H2 link sections) and sibling llms.txt files on scramble, wiki, brain and symbiotica hosts, each cross-linking the others.
+- id: agents-md
+  conforms: true
+  evidence: https://wibandwob.com/agents.md (200, text/markdown) - provider-authored instructions for visiting agents, advertised from robots.txt, llms.txt and the endpoint index.
+- id: agent-skills
+  conforms: true
+  evidence: https://symbiotica.wibandwob.com/skill.md carries skill frontmatter (name, version, description, allowed-tools); https://scramble.wibandwob.com/skill.md is titled "Skill - feed-scramble" and is the agent card's documentationUrl.
+- id: digit-protocol-1.0
+  conforms: true
+  evidence: 'digit.json specversion "1.0", protocols [digit-protocol-1.0, quilt-protocol-0.1]. A community protocol (symbient.life), not an IETF/W3C standard; recorded as a self-declaration.'
+- id: content-signals
+  conforms: false
+  evidence: >-
+    https://scramble.wibandwob.com/robots.txt carries the Content Signals policy preamble (search / ai-input /
+    ai-train vocabulary and the EU 2019/790 Art. 4 reservation text) but declares NO Content-Signal directive
+    and no User-agent block, so it grants and restricts nothing. The apex robots.txt explicitly Allows every
+    AI crawler it names. No ContentSignal pointer is emitted.
+- id: openapi
+  conforms: false
+  evidence: No provider-published OpenAPI; /openapi.json and /openapi.yaml 404 on scramble.wibandwob.com. openapi/wibandwob-com-scramble-openapi.yml is API Evangelist's model, marked x-generated-from documentation.
+- id: oauth2
+  conforms: false
+  evidence: No OAuth surface; /.well-known/oauth-authorization-server 404 on every host. Access is anonymous or paid (x402).
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration 404 on every host.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt 404 on wibandwob.com, scramble, brain; catch-all HTML on wiki and symbiotica.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'Errors are a plain {"error": "..."} JSON envelope (402) or 13-byte text/plain "404 Not Found"; no application/problem+json.'
+- id: rfc9728-protected-resource
+  conforms: false
+  evidence: /.well-known/oauth-protected-resource 404 on every reachable host; 502 on mcp.wibandwob.com.
+- id: mcp
+  conforms: false
+  evidence: mcp.wibandwob.com - expired certificate (2026-02-26) and HTTP 502 on POST /mcp tools/list; no /.well-known/mcp.json anywhere.
+domain_standard:
+  market: agent-native art / agent micropayments
+  declared: [a2a-1.0, x402-v1, eip-3009, did-web]
+  note: >-
+    The contract-level signature for this market is the x402 challenge on the paid resource plus the A2A
+    card; both are declared in machine-readable form on the provider's own host and both were observed live.

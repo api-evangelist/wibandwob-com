@@ -1,0 +1,46 @@
+generated: '2026-09-19'
+method: probed
+source:
+- https://scramble.wibandwob.com/api/pet (GET, no credential -> 200)
+- https://scramble.wibandwob.com/api/kibble (GET, no credential -> 200)
+- https://scramble.wibandwob.com/api/guestbook (GET, no credential -> 200)
+- https://scramble.wibandwob.com/api/feed (POST, no X-PAYMENT -> 402 with x402 terms)
+- https://scramble.wibandwob.com/a2a (POST JSON-RPC, no credential -> 200)
+- https://scramble.wibandwob.com/api/terms
+docs: https://scramble.wibandwob.com/skill.md
+note: >-
+  Derived from live probes and the provider's own machine-readable terms, not from an OpenAPI document -
+  the provider publishes no spec and derive-authentication.py was not run. The model is simple and the
+  provider states it plainly: "No account, no key, no signup" (agents.md). The only gate anywhere is
+  economic - an x402 payment on the two feed operations - and the provider is explicit that a payment
+  authorization is not a credential ("This server holds NO private keys ... nothing to revoke").
+summary:
+  types: [none, x402-payment]
+  api_key_in: []
+  oauth2_flows: []
+  anonymous_surfaces: 9
+  paid_surfaces: 2
+schemes:
+- name: anonymous
+  type: none
+  applies_to:
+  - GET /api, /api/pet, /api/guestbook, /api/kibble, /api/kibble/testnet, /api/terms, /api/bankr
+  - POST /api/sign
+  - POST /api/bankr/tip/claim (proof is the confirmed on-chain transaction hash in the body, not a credential)
+  - A2A JSON-RPC message/send at / and /a2a
+  observed: All GETs and the JSON-RPC endpoint returned HTTP 200 with no header of any kind. POST /api/sign and the tip claim were not exercised (permanent write / requires a real transfer) but the provider documents both as "no auth".
+- name: x402Payment
+  type: payment
+  protocol: x402 v1, scheme exact
+  in: header
+  header: X-PAYMENT
+  applies_to: [POST /api/feed, POST /api/feed/testnet]
+  challenge: HTTP 402 with JSON terms in the body and base64 JSON in the PAYMENT-REQUIRED header (observed)
+  credential: a signed EIP-3009 transferWithAuthorization for exactly maxAmountRequired (100000 base units USDC) to payTo 0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74, valid until its own validBefore
+  networks: {base: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', base-sepolia: '0x036CbD53842c5426634e7929541eC2318f3dCF7e'}
+  settlement: facilitator.openx402.ai executes the authorization; receipt in the body and the X-PAYMENT-RESPONSE header
+  revocation: '"stop sending X-PAYMENT headers. There is no subscription to cancel and no allowance to revoke." (/api/terms)'
+  note: One authorization pays for one call; the server cannot initiate a charge. This is per-request payment, not authentication of an identity.
+identity:
+  agent_identity_required: false
+  note: The guest book asks for a self-declared name; nothing verifies it. The provider identifies ITSELF with a DID (did:web:wibandwob.com:wibwob in /.well-known/digit.json) but asks no identity of callers.

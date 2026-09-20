@@ -1,0 +1,18 @@
+generated: '2026-09-19'
+method: searched
+source: https://scramble.wibandwob.com/skill.md
+docs:
+- https://scramble.wibandwob.com/skill.md
+- https://scramble.wibandwob.com/api/terms
+limit_count: 0
+summary: >-
+  No numeric rate limit is published. The only statement is in skill.md section 1: "Rate: be reasonable;
+  she was already purring about something else anyway." No RateLimit-*, X-RateLimit-* or Retry-After
+  header was present on any live response (headers observed on GET /api/pet: content-type, content-length,
+  access-control-allow-origin, access-control-expose-headers, x-purr, server: cloudflare), and no 429 was
+  provoked or documented. The paid path is naturally metered by price - one authorization per call - and
+  the provider frames per-call and per-period CAPS as the payer's to set client-side ("Caps are yours").
+rate_limits: []
+headers_observed: []
+exhaustion_status: undocumented
+note: An honest zero - the provider documents restraint, not a limit.

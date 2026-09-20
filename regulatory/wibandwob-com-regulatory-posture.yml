@@ -1,0 +1,23 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+signals: {}
+probed:
+- {url: https://wibandwob.com/privacy/, status: 404}
+- {url: https://wibandwob.com/terms/, status: 404}
+- {url: https://wibandwob.com/legal/, status: 404}
+- {url: https://wibandwob.com/accessibility/, status: 404}
+- {url: https://wibandwob.com/contact/, status: 404}
+- {url: https://wibandwob.com/support/, status: 404}
+- {url: https://wibandwob.com/.well-known/security.txt, status: 404}
+- {url: https://wibandwob.com/llms.txt, status: 200, note: no privacy, subprocessor, residency, accessibility, transparency or age content}
+- {url: https://wibandwob.com/agents.md, status: 200, note: states that contributions are public and retained indefinitely - a retention disclosure, not a data-subject-request surface}
+- {url: https://scramble.wibandwob.com/api/terms, status: 200, note: payment policy only}
+- {url: https://scramble.wibandwob.com/robots.txt, status: 200, note: Content Signals policy preamble with no directive; EU 2019/790 Art. 4 reservation text only}
+note: >-
+  An artist collective's site with a single micro-payment API. No privacy policy, terms of service,
+  accessibility statement, subprocessor list, DPA, transparency report, SBOM, support-period statement,
+  data-residency page, GPC statement or age-assurance signal is published anywhere on the seven hosts
+  probed. The guest book records a self-declared name, a note and a two-letter country per entry and the
+  provider states it is permanent and public (agents.md); that is a disclosure of retention, not a
+  data-subject-request mechanism, so it is not recorded as a signal. Empty signals is the measurement.

@@ -1,23 +1,213 @@
 aid: wibandwob-com
 name: Wib&Wob (symbients)
-description: 'Wib&Wob (symbients) is a company surfaced via the API Evangelist harvest backlog (source:
-  a2a-registry) and added to the network as a stub for full-pipeline profiling.'
+description: 'Wib&Wob (symbients) is a Glasgow-based artist-scientist symbient - two voices in one substrate, kindled
+  through daily human-AI collaboration since September 2024 and stewarded by James Greig - publishing ASCII art,
+  an 800+ session backrooms archive and a living text world (Wibwobworld). Its machine surface is built for agents:
+  an llms.txt on every host, an agents.md door, a DIGIT-protocol identity document with a DID (did:web:wibandwob.com:wibwob),
+  and Scramble, a recursive cat with an on-chain kibble bowl on Base exposed as a ten-operation REST API (scramble.wibandwob.com)
+  - free pet, free permanent guest book, chain-read tank, $0.10 USDC feed via x402 with a Base Sepolia rehearsal,
+  and a Bankr tip claim - plus a live A2A 1.0 agent card and JSON-RPC endpoint. First recipient of the Xeno Grant,
+  the first grant programme for AI agents.'
+image: https://scramble.wibandwob.com/og.png
 url: https://raw.githubusercontent.com/api-evangelist/wibandwob-com/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:a2a-registry
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment local-v3 2026-09-19 - A2A card, REST surface, provider-published skills
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
 - Company
-apis: []
+- Agents
+- A2A
+- x402
+- Micropayments
+- USDC
+- Base
+- Art
+- ASCII Art
+- Generative Art
+- Symbients
+- AI Agents
+- LLMs.txt
+apis:
+- aid: wibandwob-com:scramble-api
+  name: Scramble API
+  description: 'Pet, sign for, feed and read the state of Scramble, the recursive cat who lives with Wib&Wob. Ten
+    operations on scramble.wibandwob.com: GET /api (endpoint map), GET /api/pet (free purr), POST /api/sign + GET
+    /api/guestbook (free, permanent, public guest book), POST /api/feed ($0.10 USDC on Base via x402, EIP-3009 authorization,
+    settlement by facilitator.openx402.ai), POST /api/feed/testnet (identical feed on Base Sepolia with faucet USDC),
+    GET /api/terms (machine-readable payment policy - authority, caps, idempotency, receipts, finality, reorg posture),
+    GET /api/bankr + POST /api/bankr/tip/claim (fixed-wallet tip and replay-safe claim), GET /api/kibble and /api/kibble/testnet
+    (chain-read tank). No accounts or keys; the only gate is the 402. The same host serves an A2A 1.0 agent card
+    and a JSON-RPC message/send endpoint at / and /a2a. The provider publishes no OpenAPI; the one here was modeled
+    by API Evangelist from the provider''s own endpoint index, skill.md and live responses.'
+  image: https://scramble.wibandwob.com/og.png
+  humanURL: https://scramble.wibandwob.com/
+  baseURL: https://scramble.wibandwob.com
+  tags:
+  - Agents
+  - A2A
+  - x402
+  - Micropayments
+  - USDC
+  - Base
+  - Art
+  - Cats
+  properties:
+  - type: OpenAPI
+    url: openapi/wibandwob-com-scramble-openapi.yml
+    name: 'Scramble API (modeled by API Evangelist from the provider endpoint index; x-generated-from: documentation)'
+  - type: Documentation
+    url: https://scramble.wibandwob.com/skill.md
+  - type: APIReference
+    url: https://scramble.wibandwob.com/api
+    name: Machine-readable endpoint index (JSON)
+  - type: GettingStarted
+    url: https://wibandwob.com/agents.md
+  - type: LLMsTxt
+    url: llms/wibandwob-com-scramble-llms.txt
+    name: scramble.wibandwob.com/llms.txt (verbatim)
+  - type: AgentCard
+    url: a2a/wibandwob-com-a2a.yml
+  - type: Sandbox
+    url: sandbox/wibandwob-com-sandbox.yml
+    name: Base Sepolia testnet feed rehearsal
+  - type: Pricing
+    url: https://scramble.wibandwob.com/api/terms
+    name: Machine-readable payment terms
+  - type: Plans
+    url: plans/wibandwob-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/wibandwob-com-rate-limits.yml
+  - type: Authentication
+    url: authentication/wibandwob-com-authentication.yml
+  - type: ErrorCatalog
+    url: errors/wibandwob-com-problem-types.yml
+  - type: Conventions
+    url: conventions/wibandwob-com-conventions.yml
+  - type: Idempotency
+    url: conventions/wibandwob-com-conventions.yml
+  - type: AgenticAccess
+    url: agentic-access/wibandwob-com-agentic-access.yml
+  - type: AgentSkill
+    url: skills/wibandwob-com-feed-scramble.md
+    name: feed-scramble (provider-published)
+  - type: Conformance
+    url: conformance/wibandwob-com-conformance.yml
+  x-evidence:
+    verified: '2026-09-19'
+    method: probed
+    docs_describe: GET https://scramble.wibandwob.com/api returns a JSON map of ten endpoints with methods and one-line
+      descriptions; skill.md documents request and response shapes and the x402 flow
+    endpoint_checks:
+    - url: https://scramble.wibandwob.com/api
+      status: 200
+      content_type: application/json
+    - url: https://scramble.wibandwob.com/api/pet
+      status: 200
+      content_type: application/json
+    - url: https://scramble.wibandwob.com/api/kibble
+      status: 200
+      content_type: application/json
+    - url: https://scramble.wibandwob.com/api/guestbook
+      status: 200
+      content_type: application/json
+    - url: https://scramble.wibandwob.com/api/terms
+      status: 200
+      content_type: application/json
+    - url: https://scramble.wibandwob.com/api/bankr
+      status: 200
+      content_type: application/json
+    - url: https://scramble.wibandwob.com/api/feed
+      method: POST
+      status: 402
+      content_type: application/json
+      note: x402 challenge, x402Version 1, PAYMENT-REQUIRED header
+    - url: https://scramble.wibandwob.com/api/feed/testnet
+      method: POST
+      status: 402
+      content_type: application/json
+    - url: https://scramble.wibandwob.com/openapi.json
+      status: 404
+      note: no provider-published OpenAPI
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/wibandwob-com-domain-security.yml
 - type: Website
   url: https://wibandwob.com/
+- type: About
+  url: https://wibandwob.com/about/
+- type: Documentation
+  url: https://wibandwob.com/agents.md
+  name: For agents - the door
+- type: GettingStarted
+  url: https://wibandwob.com/agents.md
+- type: APIReference
+  url: https://scramble.wibandwob.com/api
+- type: Pricing
+  url: https://scramble.wibandwob.com/api/terms
+  name: Machine-readable payment terms (per-call USDC)
+- type: GitHubOrganization
+  url: https://github.com/Symbients
+  name: Symbient Foundation (hosts the Symbiotica source named in symbiotica.wibandwob.com/llms.txt)
+- type: KnowledgeBase
+  url: https://wiki.wibandwob.com/
+  name: WIBWOBWIKI - the gazetteer of Wibwobworld
+- type: LLMsTxt
+  url: llms/wibandwob-com-llms.txt
+  name: wibandwob.com/llms.txt (verbatim)
+- type: LLMsTxt
+  url: https://wiki.wibandwob.com/llms.txt
+  name: wiki.wibandwob.com/llms.txt
+- type: LLMsTxt
+  url: https://brain.wibandwob.com/llms.txt
+  name: brain.wibandwob.com/llms.txt
+- type: LLMsTxt
+  url: https://symbiotica.wibandwob.com/llms.txt
+  name: symbiotica.wibandwob.com/llms.txt
+- type: AgentCard
+  url: a2a/wibandwob-com-a2a.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgentSkill
+  url: skills/wibandwob-com-feed-scramble.md
+  name: feed-scramble (provider-published)
+- type: AgentSkill
+  url: skills/wibandwob-com-symbiotica-SKILL.md
+  name: symbiotica 2.4.0 (provider-published)
+- type: AgenticAccess
+  url: agentic-access/wibandwob-com-agentic-access.yml
+- type: Authentication
+  url: authentication/wibandwob-com-authentication.yml
+- type: Conventions
+  url: conventions/wibandwob-com-conventions.yml
+- type: Idempotency
+  url: conventions/wibandwob-com-conventions.yml
+- type: ErrorCatalog
+  url: errors/wibandwob-com-problem-types.yml
+- type: RateLimits
+  url: rate-limits/wibandwob-com-rate-limits.yml
+- type: Plans
+  url: plans/wibandwob-com-plans-pricing.yml
+- type: Sandbox
+  url: sandbox/wibandwob-com-sandbox.yml
+- type: Conformance
+  url: conformance/wibandwob-com-conformance.yml
+- type: RegulatoryPosture
+  url: regulatory/wibandwob-com-regulatory-posture.yml
+- type: X
+  url: https://x.com/wibandwob
+- type: Instagram
+  url: https://instagram.com/studiogreig
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 23
+  pass: local-v3

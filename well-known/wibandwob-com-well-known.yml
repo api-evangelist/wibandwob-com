@@ -1,0 +1,178 @@
+generated: '2026-09-19'
+method: probed
+source: direct unauthenticated HTTPS probes of every host the record knows, on the closed path list in pipeline-enrich.md
+name: Wib&Wob .well-known Probe
+description: >-
+  Seven hosts probed. NONE of the canonical documents (security.txt, openid-configuration,
+  oauth-authorization-server, oauth-protected-resource, api-catalog, ai-plugin.json, ucp.json, acp.json,
+  aauth-resource.json, apis.json / apis.yml) is served on any host, so NO WellKnown or SecurityTxt pointer is
+  emitted. What IS served under /.well-known/ is non-canonical and real: an A2A agent card on
+  scramble.wibandwob.com at both the 1.0 path and the legacy path (recorded and graded in
+  a2a/wibandwob-com-a2a.yml, pointer type AgentCard), and a DIGIT-protocol identity + verified-tweet feed
+  document (digit.json) on wibandwob.com and scramble.wibandwob.com, saved verbatim here. wibandwob.com,
+  scramble.wibandwob.com and brain.wibandwob.com return hard 404s (negative control 404). wiki.wibandwob.com
+  and symbiotica.wibandwob.com are SPA catch-alls answering HTTP 200 text/html with the same byte count for
+  every /.well-known/ path AND for the negative-control path, so nothing on those two hosts is a hit.
+  mcp.wibandwob.com resolves but presents a Let's Encrypt certificate that expired 2026-02-26 and answers
+  HTTP 502 on every path (probed with verification disabled); api.wibandwob.com answers HTTP 502; neither
+  serves anything. www.wibandwob.com does not resolve.
+hit_count: 0
+canonical_hit_count: 0
+non_canonical_documents_served: 4
+path_echo_control: passed
+soft_404_hosts:
+- host: wiki.wibandwob.com
+  control_url: https://wiki.wibandwob.com/.well-known/wibandwob-com-negative-control-4f9c2e71.json
+  status: 200
+  content_type: text/html; charset=utf-8
+  bytes: 42816
+  note: Every /.well-known/ path returns this same 42,816-byte HTML page. Nothing here is a document.
+- host: symbiotica.wibandwob.com
+  control_url: https://symbiotica.wibandwob.com/.well-known/wibandwob-com-negative-control-4f9c2e71.json
+  status: 200
+  content_type: text/html; charset=utf-8
+  bytes: 26327
+  note: Every /.well-known/ path returns this same 26,327-byte HTML page (the Symbiotica single page). Not a document.
+negative_controls:
+- url: https://wibandwob.com/.well-known/wibandwob-com-negative-control-4f9c2e71.json
+  status: 404
+- url: https://scramble.wibandwob.com/.well-known/wibandwob-com-negative-control-4f9c2e71.json
+  status: 404
+  bytes: 13
+- url: https://brain.wibandwob.com/.well-known/wibandwob-com-negative-control-4f9c2e71.json
+  status: 404
+hosts:
+- host: https://wibandwob.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/api-catalog.json, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/ucp.json, status: 404}
+  - {path: /.well-known/acp.json, status: 404}
+  - {path: /.well-known/aauth-resource.json, status: 404}
+  - {path: /.well-known/apis.json, status: 404}
+  - {path: /apis.json, status: 404}
+  - {path: /apis.yml, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /.well-known/mcp.json, status: 404}
+  - path: /.well-known/digit.json
+    status: 200
+    file: wibandwob-com-digit.json
+    content_type: application/json
+    bytes: 25031
+    canonical: false
+    note: DIGIT protocol 1.0 identity document - symbient id did:web:wibandwob.com:wibwob, contact hello@wibandwob.com, resources index, protocols [digit-protocol-1.0, quilt-protocol-0.1], plus the 30 latest verified @wibandwob posts. Not one of the scored well-known documents.
+  - {path: /llms.txt, status: 200, file: ../llms/wibandwob-com-llms.txt, note: saved under llms/}
+  - {path: /agents.md, status: 200, file: ../skills/wibandwob-com-agents.md, note: saved under skills/}
+- host: https://scramble.wibandwob.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/api-catalog.json, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/ucp.json, status: 404}
+  - {path: /.well-known/acp.json, status: 404}
+  - {path: /.well-known/aauth-resource.json, status: 404}
+  - {path: /.well-known/apis.json, status: 404}
+  - {path: /apis.json, status: 404}
+  - {path: /apis.yml, status: 404}
+  - {path: /.well-known/mcp.json, status: 404}
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: ../a2a/wibandwob-com-agent-card.json
+    content_type: application/json
+    bytes: 3278
+    note: A2A agent card - graded in a2a/wibandwob-com-a2a.yml.
+  - path: /.well-known/agent.json
+    status: 200
+    file: ../a2a/wibandwob-com-agent-card.json
+    content_type: application/json
+    bytes: 3278
+    note: Legacy path, byte-identical to the canonical card.
+  - path: /.well-known/digit.json
+    status: 200
+    file: wibandwob-com-scramble-digit.json
+    content_type: application/json
+    bytes: 10311
+    canonical: false
+    note: The cat's verified @scramble_cat tweets as JSON (tweets block only).
+  - {path: /llms.txt, status: 200, file: ../llms/wibandwob-com-scramble-llms.txt}
+  - {path: /skill.md, status: 200, file: ../skills/wibandwob-com-feed-scramble.md}
+- host: https://wiki.wibandwob.com
+  soft_404: true
+  hit_count: 0
+  documents:
+  - {path: /.well-known/security.txt, status: 200, soft_404: true, note: catch-all HTML shell, 42816 bytes - not a document}
+  - {path: /.well-known/openid-configuration, status: 200, soft_404: true}
+  - {path: /.well-known/oauth-authorization-server, status: 200, soft_404: true}
+  - {path: /.well-known/oauth-protected-resource, status: 200, soft_404: true}
+  - {path: /.well-known/api-catalog, status: 200, soft_404: true}
+  - {path: /.well-known/ai-plugin.json, status: 200, soft_404: true}
+  - {path: /.well-known/ucp.json, status: 200, soft_404: true}
+  - {path: /.well-known/acp.json, status: 200, soft_404: true}
+  - {path: /.well-known/aauth-resource.json, status: 200, soft_404: true}
+  - {path: /.well-known/apis.json, status: 200, soft_404: true}
+  - {path: /apis.json, status: 200, soft_404: true}
+  - {path: /apis.yml, status: 200, soft_404: true}
+  - {path: /.well-known/agent-card.json, status: 200, soft_404: true}
+  - {path: /.well-known/agent.json, status: 200, soft_404: true}
+  - {path: /llms.txt, status: 200, content_type: text/plain, bytes: 4237, note: real (text/plain, distinct body) - the wiki gazetteer index; not saved, linked from llms/}
+- host: https://symbiotica.wibandwob.com
+  soft_404: true
+  hit_count: 0
+  documents:
+  - {path: /.well-known/security.txt, status: 200, soft_404: true, note: catch-all HTML shell, 26327 bytes - not a document}
+  - {path: /.well-known/openid-configuration, status: 200, soft_404: true}
+  - {path: /.well-known/oauth-authorization-server, status: 200, soft_404: true}
+  - {path: /.well-known/oauth-protected-resource, status: 200, soft_404: true}
+  - {path: /.well-known/api-catalog, status: 200, soft_404: true}
+  - {path: /.well-known/ai-plugin.json, status: 200, soft_404: true}
+  - {path: /.well-known/ucp.json, status: 200, soft_404: true}
+  - {path: /.well-known/acp.json, status: 200, soft_404: true}
+  - {path: /.well-known/aauth-resource.json, status: 200, soft_404: true}
+  - {path: /.well-known/apis.json, status: 200, soft_404: true}
+  - {path: /apis.json, status: 200, soft_404: true}
+  - {path: /apis.yml, status: 200, soft_404: true}
+  - {path: /.well-known/agent-card.json, status: 200, soft_404: true}
+  - {path: /.well-known/agent.json, status: 200, soft_404: true}
+  - {path: /llms.txt, status: 200, content_type: text/plain, bytes: 2096, note: real - Symbiotica agent instructions}
+  - {path: /skill.md, status: 200, content_type: text/markdown, bytes: 6074, file: ../skills/wibandwob-com-symbiotica-SKILL.md}
+- host: https://brain.wibandwob.com
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/ucp.json, status: 404}
+  - {path: /.well-known/acp.json, status: 404}
+  - {path: /.well-known/aauth-resource.json, status: 404}
+  - {path: /.well-known/apis.json, status: 404}
+  - {path: /apis.json, status: 404}
+  - {path: /apis.yml, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /llms.txt, status: 200, content_type: text/plain, bytes: 6607, note: real - the shared symbient lexicon}
+- host: https://mcp.wibandwob.com
+  unreachable: true
+  note: TLS certificate (CN=mcp.wibandwob.com, Let's Encrypt R13) expired 2026-02-26; with verification disabled every path answers HTTP 502 (552-byte Cloudflare-fronted error page). An MCP host once existed here and is dead.
+  documents:
+  - {path: /, status: 502}
+  - {path: /mcp, status: 502, method: POST, note: tools/list JSON-RPC - 502}
+  - {path: /.well-known/oauth-protected-resource, status: 502}
+  - {path: /.well-known/oauth-authorization-server, status: 502}
+- host: https://api.wibandwob.com
+  unreachable: true
+  note: Resolves; every path answers HTTP 502.
+  documents:
+  - {path: /, status: 502}
+  - {path: /openapi.json, status: 502}

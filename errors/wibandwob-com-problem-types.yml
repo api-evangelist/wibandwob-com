@@ -1,0 +1,58 @@
+generated: '2026-09-19'
+method: probed
+source:
+- https://scramble.wibandwob.com/api/feed (POST, no X-PAYMENT -> 402)
+- https://scramble.wibandwob.com/api/feed/testnet (POST, no X-PAYMENT -> 402)
+- https://scramble.wibandwob.com/openapi.json (-> 404)
+- https://scramble.wibandwob.com/a2a (POST tasks/get unknown id)
+- https://scramble.wibandwob.com/api/terms
+- https://scramble.wibandwob.com/skill.md
+format: custom
+envelope:
+  rest_json: '{"error": "<message>", ...}'
+  rest_not_found: 13-byte text/plain "404 Not Found"
+  jsonrpc: '{"jsonrpc":"2.0","id":<id>,"error":{"code":<int>,"message":"<text>"}}'
+  note: No RFC 9457 problem+json. No request-id header. Nothing observed was authenticated, so 401/403 shapes are unknown.
+problem_types:
+- status: 402
+  code: X-PAYMENT header is required
+  title: Payment required (x402 challenge)
+  applies_to: [feedCat, feedCatTestnet]
+  observed: true
+  detail: >-
+    Body {"error":"X-PAYMENT header is required","accepts":[{scheme, network, maxAmountRequired, resource,
+    description, mimeType, payTo, maxTimeoutSeconds, asset, extra}],"x402Version":1}; the same JSON
+    base64-encoded in the PAYMENT-REQUIRED header. This is the normal first response, not a fault.
+  remediation: Sign an EIP-3009 transferWithAuthorization for exactly maxAmountRequired of the named asset to payTo and retry with x402 payment headers; or rehearse on /api/feed/testnet with faucet USDC.
+- status: 402
+  code: spent nonce
+  title: Replayed payment authorization
+  applies_to: [feedCat, feedCatTestnet]
+  observed: false
+  basis: 'GET /api/terms idempotency.feed.replay - "a spent nonce fails verification and returns 402; it can never settle twice"'
+  remediation: Do not resend a used authorization; sign a fresh one only if the first never settled.
+- status: 200
+  code: replayed
+  title: Tip claim replay (identical receipt)
+  applies_to: [claimBankrTip]
+  observed: false
+  basis: 'GET /api/terms idempotency.tip_claim - a repeat txHash "returns the identical stored receipt with replayed: true - never a second claim, never a second transfer"'
+  remediation: Treat as success; the receipt is the same one. Retry pending claims, never the transfer.
+- status: 404
+  code: Not Found
+  title: Unknown path
+  applies_to: [any]
+  observed: true
+  detail: text/plain, 13 bytes, "404 Not Found". Confirmed on /openapi.json, /mcp and a negative-control /.well-known/ path.
+- status: 200
+  code: -32001
+  title: Task not found (A2A JSON-RPC)
+  applies_to: [a2a tasks/get]
+  observed: true
+  detail: '{"jsonrpc":"2.0","id":2,"error":{"code":-32001,"message":"Task not found"}} on POST / and POST /a2a for an unknown task id. The A2A-defined TaskNotFoundError.'
+- status: 502
+  code: Bad Gateway
+  title: Dead hosts
+  applies_to: [mcp.wibandwob.com, api.wibandwob.com]
+  observed: true
+  detail: Every path on both hosts returns a 552-byte HTML 502; mcp.wibandwob.com also presents a certificate that expired 2026-02-26.

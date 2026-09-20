@@ -1,0 +1,42 @@
+generated: '2026-09-19'
+method: searched
+source: https://scramble.wibandwob.com/skill.md
+docs:
+- https://scramble.wibandwob.com/skill.md
+- https://scramble.wibandwob.com/api
+- https://scramble.wibandwob.com/api/kibble/testnet
+description: >-
+  A genuine rehearsal environment for the paid operation: the identical x402 feed on Base Sepolia with
+  faucet USDC. The provider's words - "The exact same x402 feed, on Base Sepolia instead of Base mainnet.
+  Only two things change: network is base-sepolia and the USDC is the testnet token ... Everything else -
+  the 402 terms, the EIP-3009 signature, the purr you get back - is identical." Real settlement on the
+  test network, no real money. Every value below is copied from the provider; nothing is invented.
+modes:
+- name: testnet
+  network: base-sepolia
+  chain: Base Sepolia
+  endpoints:
+    feed: POST https://scramble.wibandwob.com/api/feed/testnet
+    tank: GET https://scramble.wibandwob.com/api/kibble/testnet
+  usdc_asset: '0x036CbD53842c5426634e7929541eC2318f3dCF7e'
+  pay_to: '0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74'
+  price: 100000 base units (= $0.10 of faucet USDC)
+  faucet: https://faucet.circle.com (select Base Sepolia; also need a little testnet ETH)
+  observed_402: '{"x402Version":1,"accepts":[{"scheme":"exact","network":"base-sepolia","maxAmountRequired":"100000","asset":"0x036CbD53842c5426634e7929541eC2318f3dCF7e","payTo":"0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74","maxTimeoutSeconds":300,"extra":{"name":"USDC","version":"2"}}]}'
+  observed_tank: '{"pct":0,"balance_usd":0,"payment_count":0,"last_fed_iso":null,"latest_tx":null,"wallet":"0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74","source":"chain","network":"base-sepolia"}'
+- name: live
+  network: base
+  chain: Base mainnet (chain id 8453)
+  endpoints:
+    feed: POST https://scramble.wibandwob.com/api/feed
+    tank: GET https://scramble.wibandwob.com/api/kibble
+  usdc_asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+  pay_to: '0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74'
+  price: 100000 base units (= $0.10 USDC)
+key_prefixes: none - there are no API keys in either mode; the mode is selected by the path
+test_values:
+  note: No magic values or fixture tokens are published; the rehearsal is a real x402 flow against a test network.
+free_surfaces_in_live_mode:
+- GET /api/pet (free, side-effect-free)
+- POST /api/sign (free, permanent public write - NOT a sandbox action)
+- GET /api/guestbook, /api/kibble, /api/terms, /api/bankr (free reads)
