@@ -1,0 +1,184 @@
+openapi: 3.2.0
+info:
+  title: Scramble Bankr API
+  version: '1'
+  summary: Pet, sign for, feed and read the state of Scramble, the recursive cat who lives with Wib&Wob.
+  description: Scramble is a recursive cat (est.
+  contact:
+    name: Wib&Wob
+    url: https://wibandwob.com
+    email: hello@wibandwob.com
+  x-provider:
+    organization: Wib&Wob (symbients)
+    url: https://wibandwob.com
+  x-generated-from: documentation
+  x-authored-by: API Evangelist
+  x-modeled-from:
+  - https://scramble.wibandwob.com/api
+  - https://scramble.wibandwob.com/skill.md
+  - https://scramble.wibandwob.com/api/terms
+  - https://scramble.wibandwob.com/api/bankr
+  - https://scramble.wibandwob.com/.well-known/agent-card.json
+  x-provenance:
+    generated: '2026-09-19'
+    method: generated
+    by: API Evangelist enrichment pipeline (local-v3)
+    basis: provider endpoint index + provider agent manual + live unauthenticated responses
+    provider_published_openapi: false
+    note: Modeled, not harvested. Treat as a faithful description of a surface the provider documents in prose and JSON rather than as the provider's own contract.
+servers:
+- url: https://scramble.wibandwob.com
+  description: Production. The same host serves the A2A JSON-RPC endpoint (POST / and POST /a2a) and the agent card.
+tags:
+- name: Bankr
+  description: Bankr tip contract and replay-safe claim.
+paths:
+  /api/bankr:
+    get:
+      tags:
+      - Bankr
+      operationId: getBankrContract
+      summary: Bankr pet/feed/tip contract (machine-readable)
+      description: Fixed tip target on Base (chain id 8453), $0.10 minimum, the claim route, and the embedded payment policy. Observed live 2026-09-19.
+      responses:
+        '200':
+          description: The Bankr contract.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankrContract'
+  /api/bankr/tip/claim:
+    post:
+      tags:
+      - Bankr
+      operationId: claimBankrTip
+      summary: Claim a confirmed Bankr USDC tip
+      description: 'Verifies a confirmed canonical Base USDC transfer of at least 100000 base units ($0.10) to the fixed wallet with three confirmations and returns one replay-safe receipt plus an `x_reply`. Idempotency key: the txHash - a repeat returns the identical stored receipt with `replayed: true`. The provider instructs: retry pending claims, never the transfer. Not exercised by API Evangelist.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - txHash
+              properties:
+                txHash:
+                  type: string
+                  description: The confirmed Base transaction hash.
+                  example: 0x...
+      responses:
+        '200':
+          description: The receipt (schema_version, tx_hash, block_number, confirmations, transaction_url per /api/terms; not observed).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TipClaimReceipt'
+components:
+  schemas:
+    BankrContract:
+      type: object
+      properties:
+        version:
+          type: integer
+        what:
+          type: string
+        intents:
+          type: object
+          additionalProperties: true
+        payment_policy:
+          $ref: '#/components/schemas/PaymentTerms'
+    PaymentTerms:
+      type: object
+      properties:
+        version:
+          type: integer
+        pricing:
+          type: object
+          properties:
+            model:
+              type: string
+              example: per-call
+            feed_usd:
+              type: string
+              example: '0.10'
+            tip_min_usd:
+              type: string
+              example: '0.10'
+            escalation:
+              type: string
+            refunds:
+              type: string
+        authority:
+          type: object
+          properties:
+            stored_payment_method:
+              type: boolean
+            server_initiated_charges:
+              type: boolean
+            recurring_authorization:
+              type: boolean
+            scope:
+              type: string
+            cap_owner:
+              type: string
+            revocation:
+              type: string
+        idempotency:
+          type: object
+          properties:
+            feed:
+              type: object
+              additionalProperties: true
+            tip_claim:
+              type: object
+              additionalProperties: true
+        receipts:
+          type: object
+          additionalProperties: true
+        finality:
+          type: object
+          additionalProperties: true
+        custody:
+          type: object
+          properties:
+            private_keys_held:
+              type: string
+            settlement:
+              type: string
+            payee:
+              type: string
+            payee_resolution:
+              type: string
+    TipClaimReceipt:
+      description: Fields as listed in GET /api/terms receipts.tip_claim; not observed.
+      type: object
+      properties:
+        schema_version:
+          type:
+          - integer
+          - string
+        tx_hash:
+          type: string
+        block_number:
+          type: integer
+        confirmations:
+          type: integer
+        transaction_url:
+          type: string
+          format: uri
+        replayed:
+          type: boolean
+          description: true when the same txHash was claimed before; the identical receipt is returned.
+        x_reply:
+          type: string
+      additionalProperties: true
+  securitySchemes:
+    x402Payment:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: 'x402 (version 1) payment header carrying a signed EIP-3009 transferWithAuthorization for the amount, asset and payTo named in the 402 challenge. Not a credential: one signed authorization pays for exactly one call and expires at its own validBefore; the server holds no keys and cannot initiate a charge (see GET /api/terms).'
+externalDocs:
+  description: Skill - feed-scramble (the provider's agent manual)
+  url: https://scramble.wibandwob.com/skill.md

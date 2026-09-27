@@ -1,0 +1,25 @@
+{
+  "provider": "wibandwob-com",
+  "sources": [
+    "wibandwob-com-scramble-openapi.yml"
+  ],
+  "outputs": [
+    "wibandwob-com-bankr-api-openapi.yml",
+    "wibandwob-com-cat-api-openapi.yml",
+    "wibandwob-com-feeding-api-openapi.yml",
+    "wibandwob-com-guestbook-api-openapi.yml",
+    "wibandwob-com-index-api-openapi.yml",
+    "wibandwob-com-kibble-api-openapi.yml",
+    "wibandwob-com-terms-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/wibandwob-com-scramble-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "wibandwob-com-scramble-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+7 apis, 7 total)"
+  ],
+  "skipped": []
+}

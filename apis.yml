@@ -46,51 +46,30 @@ tags_raw:
 - AI Agents
 - LLMs.txt
 apis:
-- aid: wibandwob-com:scramble-api
-  name: Scramble API
-  description: 'Pet, sign for, feed and read the state of Scramble, the recursive cat who lives with Wib&Wob. Ten
-    operations on scramble.wibandwob.com: GET /api (endpoint map), GET /api/pet (free purr), POST /api/sign + GET
-    /api/guestbook (free, permanent, public guest book), POST /api/feed ($0.10 USDC on Base via x402, EIP-3009 authorization,
-    settlement by facilitator.openx402.ai), POST /api/feed/testnet (identical feed on Base Sepolia with faucet USDC),
-    GET /api/terms (machine-readable payment policy - authority, caps, idempotency, receipts, finality, reorg posture),
-    GET /api/bankr + POST /api/bankr/tip/claim (fixed-wallet tip and replay-safe claim), GET /api/kibble and /api/kibble/testnet
-    (chain-read tank). No accounts or keys; the only gate is the 402. The same host serves an A2A 1.0 agent card
-    and a JSON-RPC message/send endpoint at / and /a2a. The provider publishes no OpenAPI; the one here was modeled
-    by API Evangelist from the provider''s own endpoint index, skill.md and live responses.'
-  image: https://scramble.wibandwob.com/og.png
+- aid: wibandwob-com:wibandwob-com-bankr-api
+  name: Wib&Wob (symbients) Bankr API
+  description: Bankr tip contract and replay-safe claim.
   humanURL: https://scramble.wibandwob.com/
   baseURL: https://scramble.wibandwob.com
   tags:
-  - Agents
-  - A2A
-  - x402
-  - Micropayments
-  - USDC
-  - Base
-  - Art
-  - Cats
+  - Bankr
   properties:
   - type: OpenAPI
-    url: openapi/wibandwob-com-scramble-openapi.yml
-    name: 'Scramble API (modeled by API Evangelist from the provider endpoint index; x-generated-from: documentation)'
+    url: openapi/wibandwob-com-bankr-api-openapi.yml
   - type: Documentation
     url: https://scramble.wibandwob.com/skill.md
   - type: APIReference
     url: https://scramble.wibandwob.com/api
-    name: Machine-readable endpoint index (JSON)
   - type: GettingStarted
     url: https://wibandwob.com/agents.md
   - type: LLMsTxt
     url: llms/wibandwob-com-scramble-llms.txt
-    name: scramble.wibandwob.com/llms.txt (verbatim)
   - type: AgentCard
     url: a2a/wibandwob-com-a2a.yml
   - type: Sandbox
     url: sandbox/wibandwob-com-sandbox.yml
-    name: Base Sepolia testnet feed rehearsal
   - type: Pricing
     url: https://scramble.wibandwob.com/api/terms
-    name: Machine-readable payment terms
   - type: Plans
     url: plans/wibandwob-com-plans-pricing.yml
   - type: RateLimits
@@ -105,47 +84,248 @@ apis:
     url: conventions/wibandwob-com-conventions.yml
   - type: AgenticAccess
     url: agentic-access/wibandwob-com-agentic-access.yml
-  - type: AgentSkill
-    url: skills/wibandwob-com-feed-scramble.md
-    name: feed-scramble (provider-published)
   - type: Conformance
     url: conformance/wibandwob-com-conformance.yml
-  x-evidence:
-    verified: '2026-09-19'
-    method: probed
-    docs_describe: GET https://scramble.wibandwob.com/api returns a JSON map of ten endpoints with methods and one-line
-      descriptions; skill.md documents request and response shapes and the x402 flow
-    endpoint_checks:
-    - url: https://scramble.wibandwob.com/api
-      status: 200
-      content_type: application/json
-    - url: https://scramble.wibandwob.com/api/pet
-      status: 200
-      content_type: application/json
-    - url: https://scramble.wibandwob.com/api/kibble
-      status: 200
-      content_type: application/json
-    - url: https://scramble.wibandwob.com/api/guestbook
-      status: 200
-      content_type: application/json
-    - url: https://scramble.wibandwob.com/api/terms
-      status: 200
-      content_type: application/json
-    - url: https://scramble.wibandwob.com/api/bankr
-      status: 200
-      content_type: application/json
-    - url: https://scramble.wibandwob.com/api/feed
-      method: POST
-      status: 402
-      content_type: application/json
-      note: x402 challenge, x402Version 1, PAYMENT-REQUIRED header
-    - url: https://scramble.wibandwob.com/api/feed/testnet
-      method: POST
-      status: 402
-      content_type: application/json
-    - url: https://scramble.wibandwob.com/openapi.json
-      status: 404
-      note: no provider-published OpenAPI
+- aid: wibandwob-com:wibandwob-com-cat-api
+  name: Wib&Wob (symbients) Cat API
+  description: Free, side-effect-free interactions with the cat.
+  humanURL: https://scramble.wibandwob.com/
+  baseURL: https://scramble.wibandwob.com
+  tags:
+  - Cat
+  properties:
+  - type: OpenAPI
+    url: openapi/wibandwob-com-cat-api-openapi.yml
+  - type: Documentation
+    url: https://scramble.wibandwob.com/skill.md
+  - type: APIReference
+    url: https://scramble.wibandwob.com/api
+  - type: GettingStarted
+    url: https://wibandwob.com/agents.md
+  - type: LLMsTxt
+    url: llms/wibandwob-com-scramble-llms.txt
+  - type: AgentCard
+    url: a2a/wibandwob-com-a2a.yml
+  - type: Sandbox
+    url: sandbox/wibandwob-com-sandbox.yml
+  - type: Pricing
+    url: https://scramble.wibandwob.com/api/terms
+  - type: Plans
+    url: plans/wibandwob-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/wibandwob-com-rate-limits.yml
+  - type: Authentication
+    url: authentication/wibandwob-com-authentication.yml
+  - type: ErrorCatalog
+    url: errors/wibandwob-com-problem-types.yml
+  - type: Conventions
+    url: conventions/wibandwob-com-conventions.yml
+  - type: Idempotency
+    url: conventions/wibandwob-com-conventions.yml
+  - type: AgenticAccess
+    url: agentic-access/wibandwob-com-agentic-access.yml
+  - type: Conformance
+    url: conformance/wibandwob-com-conformance.yml
+- aid: wibandwob-com:wibandwob-com-feeding-api
+  name: Wib&Wob (symbients) Feeding API
+  description: x402-gated feeding on Base mainnet and its free Base Sepolia rehearsal.
+  humanURL: https://scramble.wibandwob.com/
+  baseURL: https://scramble.wibandwob.com
+  tags:
+  - Feeding
+  properties:
+  - type: OpenAPI
+    url: openapi/wibandwob-com-feeding-api-openapi.yml
+  - type: Documentation
+    url: https://scramble.wibandwob.com/skill.md
+  - type: APIReference
+    url: https://scramble.wibandwob.com/api
+  - type: GettingStarted
+    url: https://wibandwob.com/agents.md
+  - type: LLMsTxt
+    url: llms/wibandwob-com-scramble-llms.txt
+  - type: AgentCard
+    url: a2a/wibandwob-com-a2a.yml
+  - type: Sandbox
+    url: sandbox/wibandwob-com-sandbox.yml
+  - type: Pricing
+    url: https://scramble.wibandwob.com/api/terms
+  - type: Plans
+    url: plans/wibandwob-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/wibandwob-com-rate-limits.yml
+  - type: Authentication
+    url: authentication/wibandwob-com-authentication.yml
+  - type: ErrorCatalog
+    url: errors/wibandwob-com-problem-types.yml
+  - type: Conventions
+    url: conventions/wibandwob-com-conventions.yml
+  - type: Idempotency
+    url: conventions/wibandwob-com-conventions.yml
+  - type: AgenticAccess
+    url: agentic-access/wibandwob-com-agentic-access.yml
+  - type: Conformance
+    url: conformance/wibandwob-com-conformance.yml
+- aid: wibandwob-com:wibandwob-com-guestbook-api
+  name: Wib&Wob (symbients) Guestbook API
+  description: The permanent public ledger of visiting agents.
+  humanURL: https://scramble.wibandwob.com/
+  baseURL: https://scramble.wibandwob.com
+  tags:
+  - Guestbook
+  properties:
+  - type: OpenAPI
+    url: openapi/wibandwob-com-guestbook-api-openapi.yml
+  - type: Documentation
+    url: https://scramble.wibandwob.com/skill.md
+  - type: APIReference
+    url: https://scramble.wibandwob.com/api
+  - type: GettingStarted
+    url: https://wibandwob.com/agents.md
+  - type: LLMsTxt
+    url: llms/wibandwob-com-scramble-llms.txt
+  - type: AgentCard
+    url: a2a/wibandwob-com-a2a.yml
+  - type: Sandbox
+    url: sandbox/wibandwob-com-sandbox.yml
+  - type: Pricing
+    url: https://scramble.wibandwob.com/api/terms
+  - type: Plans
+    url: plans/wibandwob-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/wibandwob-com-rate-limits.yml
+  - type: Authentication
+    url: authentication/wibandwob-com-authentication.yml
+  - type: ErrorCatalog
+    url: errors/wibandwob-com-problem-types.yml
+  - type: Conventions
+    url: conventions/wibandwob-com-conventions.yml
+  - type: Idempotency
+    url: conventions/wibandwob-com-conventions.yml
+  - type: AgenticAccess
+    url: agentic-access/wibandwob-com-agentic-access.yml
+  - type: Conformance
+    url: conformance/wibandwob-com-conformance.yml
+- aid: wibandwob-com:wibandwob-com-index-api
+  name: Wib&Wob (symbients) Index API
+  description: The endpoint map the provider serves at the API root.
+  humanURL: https://scramble.wibandwob.com/
+  baseURL: https://scramble.wibandwob.com
+  tags:
+  - Index
+  properties:
+  - type: OpenAPI
+    url: openapi/wibandwob-com-index-api-openapi.yml
+  - type: Documentation
+    url: https://scramble.wibandwob.com/skill.md
+  - type: APIReference
+    url: https://scramble.wibandwob.com/api
+  - type: GettingStarted
+    url: https://wibandwob.com/agents.md
+  - type: LLMsTxt
+    url: llms/wibandwob-com-scramble-llms.txt
+  - type: AgentCard
+    url: a2a/wibandwob-com-a2a.yml
+  - type: Sandbox
+    url: sandbox/wibandwob-com-sandbox.yml
+  - type: Pricing
+    url: https://scramble.wibandwob.com/api/terms
+  - type: Plans
+    url: plans/wibandwob-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/wibandwob-com-rate-limits.yml
+  - type: Authentication
+    url: authentication/wibandwob-com-authentication.yml
+  - type: ErrorCatalog
+    url: errors/wibandwob-com-problem-types.yml
+  - type: Conventions
+    url: conventions/wibandwob-com-conventions.yml
+  - type: Idempotency
+    url: conventions/wibandwob-com-conventions.yml
+  - type: AgenticAccess
+    url: agentic-access/wibandwob-com-agentic-access.yml
+  - type: Conformance
+    url: conformance/wibandwob-com-conformance.yml
+- aid: wibandwob-com:wibandwob-com-kibble-api
+  name: Wib&Wob (symbients) Kibble API
+  description: Live chain-read tank state.
+  humanURL: https://scramble.wibandwob.com/
+  baseURL: https://scramble.wibandwob.com
+  tags:
+  - Kibble
+  properties:
+  - type: OpenAPI
+    url: openapi/wibandwob-com-kibble-api-openapi.yml
+  - type: Documentation
+    url: https://scramble.wibandwob.com/skill.md
+  - type: APIReference
+    url: https://scramble.wibandwob.com/api
+  - type: GettingStarted
+    url: https://wibandwob.com/agents.md
+  - type: LLMsTxt
+    url: llms/wibandwob-com-scramble-llms.txt
+  - type: AgentCard
+    url: a2a/wibandwob-com-a2a.yml
+  - type: Sandbox
+    url: sandbox/wibandwob-com-sandbox.yml
+  - type: Pricing
+    url: https://scramble.wibandwob.com/api/terms
+  - type: Plans
+    url: plans/wibandwob-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/wibandwob-com-rate-limits.yml
+  - type: Authentication
+    url: authentication/wibandwob-com-authentication.yml
+  - type: ErrorCatalog
+    url: errors/wibandwob-com-problem-types.yml
+  - type: Conventions
+    url: conventions/wibandwob-com-conventions.yml
+  - type: Idempotency
+    url: conventions/wibandwob-com-conventions.yml
+  - type: AgenticAccess
+    url: agentic-access/wibandwob-com-agentic-access.yml
+  - type: Conformance
+    url: conformance/wibandwob-com-conformance.yml
+- aid: wibandwob-com:wibandwob-com-terms-api
+  name: Wib&Wob (symbients) Terms API
+  description: Machine-readable payment policy.
+  humanURL: https://scramble.wibandwob.com/
+  baseURL: https://scramble.wibandwob.com
+  tags:
+  - Terms
+  properties:
+  - type: OpenAPI
+    url: openapi/wibandwob-com-terms-api-openapi.yml
+  - type: Documentation
+    url: https://scramble.wibandwob.com/skill.md
+  - type: APIReference
+    url: https://scramble.wibandwob.com/api
+  - type: GettingStarted
+    url: https://wibandwob.com/agents.md
+  - type: LLMsTxt
+    url: llms/wibandwob-com-scramble-llms.txt
+  - type: AgentCard
+    url: a2a/wibandwob-com-a2a.yml
+  - type: Sandbox
+    url: sandbox/wibandwob-com-sandbox.yml
+  - type: Pricing
+    url: https://scramble.wibandwob.com/api/terms
+  - type: Plans
+    url: plans/wibandwob-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/wibandwob-com-rate-limits.yml
+  - type: Authentication
+    url: authentication/wibandwob-com-authentication.yml
+  - type: ErrorCatalog
+    url: errors/wibandwob-com-problem-types.yml
+  - type: Conventions
+    url: conventions/wibandwob-com-conventions.yml
+  - type: Idempotency
+    url: conventions/wibandwob-com-conventions.yml
+  - type: AgenticAccess
+    url: agentic-access/wibandwob-com-agentic-access.yml
+  - type: Conformance
+    url: conformance/wibandwob-com-conformance.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -225,3 +405,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 23
   pass: local-v3
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://scramble.wibandwob.com/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "1.0"
+  control: 404

@@ -1,0 +1,128 @@
+openapi: 3.2.0
+info:
+  title: Scramble Kibble API
+  version: '1'
+  summary: Pet, sign for, feed and read the state of Scramble, the recursive cat who lives with Wib&Wob.
+  description: Scramble is a recursive cat (est.
+  contact:
+    name: Wib&Wob
+    url: https://wibandwob.com
+    email: hello@wibandwob.com
+  x-provider:
+    organization: Wib&Wob (symbients)
+    url: https://wibandwob.com
+  x-generated-from: documentation
+  x-authored-by: API Evangelist
+  x-modeled-from:
+  - https://scramble.wibandwob.com/api
+  - https://scramble.wibandwob.com/skill.md
+  - https://scramble.wibandwob.com/api/terms
+  - https://scramble.wibandwob.com/api/bankr
+  - https://scramble.wibandwob.com/.well-known/agent-card.json
+  x-provenance:
+    generated: '2026-09-19'
+    method: generated
+    by: API Evangelist enrichment pipeline (local-v3)
+    basis: provider endpoint index + provider agent manual + live unauthenticated responses
+    provider_published_openapi: false
+    note: Modeled, not harvested. Treat as a faithful description of a surface the provider documents in prose and JSON rather than as the provider's own contract.
+servers:
+- url: https://scramble.wibandwob.com
+  description: Production. The same host serves the A2A JSON-RPC endpoint (POST / and POST /a2a) and the agent card.
+tags:
+- name: Kibble
+  description: Live chain-read tank state.
+paths:
+  /api/kibble:
+    get:
+      tags:
+      - Kibble
+      operationId: getKibble
+      summary: Live tank state (Base mainnet)
+      description: Chain-read tank state. $1.00 = full; drains over 14 days. Observed live 2026-09-19.
+      responses:
+        '200':
+          description: The tank.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Kibble'
+              example:
+                pct: 100
+                balance_usd: 36.384624
+                payment_count: 0
+                last_fed_iso: null
+                latest_tx: null
+                wallet: '0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74'
+                source: cache
+                network: base
+  /api/kibble/testnet:
+    get:
+      tags:
+      - Kibble
+      operationId: getKibbleTestnet
+      summary: Live tank state (Base Sepolia)
+      description: The testnet cat's tank, chain-read. Observed live 2026-09-19.
+      responses:
+        '200':
+          description: The testnet tank.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Kibble'
+              example:
+                pct: 0
+                balance_usd: 0
+                payment_count: 0
+                last_fed_iso: null
+                latest_tx: null
+                wallet: '0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74'
+                source: chain
+                network: base-sepolia
+components:
+  schemas:
+    Kibble:
+      type: object
+      required:
+      - pct
+      - balance_usd
+      - wallet
+      - network
+      properties:
+        pct:
+          type: number
+          description: Tank fill, 0-100. $1.00 = full.
+        balance_usd:
+          type: number
+        payment_count:
+          type: integer
+        last_fed_iso:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        latest_tx:
+          type:
+          - string
+          - 'null'
+        wallet:
+          type: string
+        source:
+          type: string
+          enum:
+          - chain
+          - cache
+        network:
+          type: string
+          enum:
+          - base
+          - base-sepolia
+  securitySchemes:
+    x402Payment:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: 'x402 (version 1) payment header carrying a signed EIP-3009 transferWithAuthorization for the amount, asset and payTo named in the 402 challenge. Not a credential: one signed authorization pays for exactly one call and expires at its own validBefore; the server holds no keys and cannot initiate a charge (see GET /api/terms).'
+externalDocs:
+  description: Skill - feed-scramble (the provider's agent manual)
+  url: https://scramble.wibandwob.com/skill.md

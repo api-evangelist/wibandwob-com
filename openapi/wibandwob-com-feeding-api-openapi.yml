@@ -1,0 +1,239 @@
+openapi: 3.2.0
+info:
+  title: Scramble Feeding API
+  version: '1'
+  summary: Pet, sign for, feed and read the state of Scramble, the recursive cat who lives with Wib&Wob.
+  description: Scramble is a recursive cat (est.
+  contact:
+    name: Wib&Wob
+    url: https://wibandwob.com
+    email: hello@wibandwob.com
+  x-provider:
+    organization: Wib&Wob (symbients)
+    url: https://wibandwob.com
+  x-generated-from: documentation
+  x-authored-by: API Evangelist
+  x-modeled-from:
+  - https://scramble.wibandwob.com/api
+  - https://scramble.wibandwob.com/skill.md
+  - https://scramble.wibandwob.com/api/terms
+  - https://scramble.wibandwob.com/api/bankr
+  - https://scramble.wibandwob.com/.well-known/agent-card.json
+  x-provenance:
+    generated: '2026-09-19'
+    method: generated
+    by: API Evangelist enrichment pipeline (local-v3)
+    basis: provider endpoint index + provider agent manual + live unauthenticated responses
+    provider_published_openapi: false
+    note: Modeled, not harvested. Treat as a faithful description of a surface the provider documents in prose and JSON rather than as the provider's own contract.
+servers:
+- url: https://scramble.wibandwob.com
+  description: Production. The same host serves the A2A JSON-RPC endpoint (POST / and POST /a2a) and the agent card.
+tags:
+- name: Feeding
+  description: x402-gated feeding on Base mainnet and its free Base Sepolia rehearsal.
+paths:
+  /api/feed:
+    post:
+      tags:
+      - Feeding
+      operationId: feedCat
+      summary: Feed the cat ($0.10 USDC on Base, x402)
+      description: 'x402-gated. The first POST without an X-PAYMENT header returns HTTP 402 with machine-readable terms (scheme exact, network base, asset USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, amount 100000 base units = $0.10, payTo the cat''s wallet, maxTimeoutSeconds 300, x402Version 1) both in the body and base64-encoded in the PAYMENT-REQUIRED response header. The caller signs an EIP-3009 transferWithAuthorization with its own key and retries with x402 payment headers; settlement is executed by facilitator.openx402.ai. Idempotency key: the EIP-3009 nonce, single-use on chain - a spent nonce fails verification with another 402 and can never settle twice. Payments are final (no refunds). Observed live: the 402 challenge. Not observed: the paid 200, transcribed from skill.md.'
+      security:
+      - x402Payment: []
+      responses:
+        '200':
+          description: The purr object with a settlement receipt (shape per skill.md; not observed by API Evangelist).
+          headers:
+            X-PAYMENT-RESPONSE:
+              description: The settlement, CORS-exposed so a browser-origin agent can read its own receipt.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedResult'
+        '402':
+          $ref: '#/components/responses/PaymentRequired'
+  /api/feed/testnet:
+    post:
+      tags:
+      - Feeding
+      operationId: feedCatTestnet
+      summary: Feed the cat on Base Sepolia (free rehearsal)
+      description: 'The identical x402 feed on Base Sepolia with faucet USDC (0x036CbD53842c5426634e7929541eC2318f3dCF7e; faucet https://faucet.circle.com). Real settlement, real purr, no real money. Observed live: the 402 challenge with network base-sepolia.'
+      security:
+      - x402Payment: []
+      responses:
+        '200':
+          description: The purr object (shape per skill.md; not observed).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedResult'
+        '402':
+          $ref: '#/components/responses/PaymentRequired'
+components:
+  schemas:
+    FeedResult:
+      description: Transcribed from skill.md section 2; not observed by API Evangelist.
+      type: object
+      properties:
+        ok:
+          type: boolean
+        purr:
+          type: string
+        mood:
+          type: string
+        message:
+          type: string
+        petting:
+          type: object
+          properties:
+            warmth:
+              type: string
+            tail:
+              type: string
+            purr_hz:
+              type: number
+        receipt:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Your EIP-3009 nonce - the idempotency key.
+            payer:
+              type: string
+            amount_base_units:
+              type: string
+            settled:
+              type: boolean
+            settlement_tx:
+              type: string
+            transaction_url:
+              type: string
+              format: uri
+        kibble:
+          $ref: '#/components/schemas/Kibble'
+    PaymentRequired:
+      type: object
+      required:
+      - error
+      - accepts
+      - x402Version
+      properties:
+        error:
+          type: string
+        x402Version:
+          type: integer
+          const: 1
+        accepts:
+          type: array
+          items:
+            type: object
+            properties:
+              scheme:
+                type: string
+                example: exact
+              network:
+                type: string
+                enum:
+                - base
+                - base-sepolia
+              maxAmountRequired:
+                type: string
+                description: USDC base units (6 decimals); "100000" = $0.10.
+              resource:
+                type: string
+                format: uri
+              description:
+                type: string
+              mimeType:
+                type: string
+              payTo:
+                type: string
+              maxTimeoutSeconds:
+                type: integer
+              asset:
+                type: string
+                description: USDC contract address on the named network.
+              extra:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  version:
+                    type: string
+    Kibble:
+      type: object
+      required:
+      - pct
+      - balance_usd
+      - wallet
+      - network
+      properties:
+        pct:
+          type: number
+          description: Tank fill, 0-100. $1.00 = full.
+        balance_usd:
+          type: number
+        payment_count:
+          type: integer
+        last_fed_iso:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        latest_tx:
+          type:
+          - string
+          - 'null'
+        wallet:
+          type: string
+        source:
+          type: string
+          enum:
+          - chain
+          - cache
+        network:
+          type: string
+          enum:
+          - base
+          - base-sepolia
+  responses:
+    PaymentRequired:
+      description: x402 challenge. The same terms are base64-encoded in the PAYMENT-REQUIRED header. Observed live 2026-09-19.
+      headers:
+        PAYMENT-REQUIRED:
+          description: Base64 JSON of the challenge body.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentRequired'
+          example:
+            error: X-PAYMENT header is required
+            accepts:
+            - scheme: exact
+              network: base
+              maxAmountRequired: '100000'
+              resource: https://scramble.wibandwob.com/api/feed
+              mimeType: application/json
+              payTo: '0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74'
+              maxTimeoutSeconds: 300
+              asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+              extra:
+                name: USD Coin
+                version: '2'
+            x402Version: 1
+  securitySchemes:
+    x402Payment:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: 'x402 (version 1) payment header carrying a signed EIP-3009 transferWithAuthorization for the amount, asset and payTo named in the 402 challenge. Not a credential: one signed authorization pays for exactly one call and expires at its own validBefore; the server holds no keys and cannot initiate a charge (see GET /api/terms).'
+externalDocs:
+  description: Skill - feed-scramble (the provider's agent manual)
+  url: https://scramble.wibandwob.com/skill.md

@@ -1,0 +1,94 @@
+openapi: 3.2.0
+info:
+  title: Scramble Cat API
+  version: '1'
+  summary: Pet, sign for, feed and read the state of Scramble, the recursive cat who lives with Wib&Wob.
+  description: Scramble is a recursive cat (est.
+  contact:
+    name: Wib&Wob
+    url: https://wibandwob.com
+    email: hello@wibandwob.com
+  x-provider:
+    organization: Wib&Wob (symbients)
+    url: https://wibandwob.com
+  x-generated-from: documentation
+  x-authored-by: API Evangelist
+  x-modeled-from:
+  - https://scramble.wibandwob.com/api
+  - https://scramble.wibandwob.com/skill.md
+  - https://scramble.wibandwob.com/api/terms
+  - https://scramble.wibandwob.com/api/bankr
+  - https://scramble.wibandwob.com/.well-known/agent-card.json
+  x-provenance:
+    generated: '2026-09-19'
+    method: generated
+    by: API Evangelist enrichment pipeline (local-v3)
+    basis: provider endpoint index + provider agent manual + live unauthenticated responses
+    provider_published_openapi: false
+    note: Modeled, not harvested. Treat as a faithful description of a surface the provider documents in prose and JSON rather than as the provider's own contract.
+servers:
+- url: https://scramble.wibandwob.com
+  description: Production. The same host serves the A2A JSON-RPC endpoint (POST / and POST /a2a) and the agent card.
+tags:
+- name: Cat
+  description: Free, side-effect-free interactions with the cat.
+paths:
+  /api/pet:
+    get:
+      tags:
+      - Cat
+      operationId: petCat
+      summary: Pet the cat (free, no side effects)
+      description: Returns a purr, a kaomoji mood, a note, and pointers to feeding, the testnet rehearsal and the guest book. Free; no authentication. The provider asks callers to "be reasonable" and publishes no numeric rate limit.
+      responses:
+        '200':
+          description: A purr.
+          headers:
+            X-Purr:
+              description: A short purr, CORS-exposed. Observed on the live response.
+              schema:
+                type: string
+              example: prrrr
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purr'
+              example:
+                purr: p r r r r r r r r (sustained)
+                mood: /ᐠ=⌵=ᐟ\
+                note: you have been permitted exactly this much affection.
+                feeding: POST /api/feed with x402 payment headers ($0.10 USDC on Base) - or send USDC direct; the chain is watched.
+                testnet: no wallet yet? POST /api/feed/testnet - same feed on Base Sepolia with free faucet USDC (faucet.circle.com). real x402, real purr, play money.
+components:
+  schemas:
+    Purr:
+      type: object
+      required:
+      - purr
+      - mood
+      properties:
+        purr:
+          type: string
+        mood:
+          type: string
+          description: A kaomoji.
+        note:
+          type: string
+        why_feed:
+          type: string
+        feeding:
+          type: string
+        testnet:
+          type: string
+        guestbook:
+          type: string
+      additionalProperties: true
+  securitySchemes:
+    x402Payment:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: 'x402 (version 1) payment header carrying a signed EIP-3009 transferWithAuthorization for the amount, asset and payTo named in the 402 challenge. Not a credential: one signed authorization pays for exactly one call and expires at its own validBefore; the server holds no keys and cannot initiate a charge (see GET /api/terms).'
+externalDocs:
+  description: Skill - feed-scramble (the provider's agent manual)
+  url: https://scramble.wibandwob.com/skill.md

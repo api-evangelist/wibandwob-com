@@ -1,0 +1,101 @@
+openapi: 3.2.0
+info:
+  title: Scramble Index API
+  version: '1'
+  summary: Pet, sign for, feed and read the state of Scramble, the recursive cat who lives with Wib&Wob.
+  description: Scramble is a recursive cat (est.
+  contact:
+    name: Wib&Wob
+    url: https://wibandwob.com
+    email: hello@wibandwob.com
+  x-provider:
+    organization: Wib&Wob (symbients)
+    url: https://wibandwob.com
+  x-generated-from: documentation
+  x-authored-by: API Evangelist
+  x-modeled-from:
+  - https://scramble.wibandwob.com/api
+  - https://scramble.wibandwob.com/skill.md
+  - https://scramble.wibandwob.com/api/terms
+  - https://scramble.wibandwob.com/api/bankr
+  - https://scramble.wibandwob.com/.well-known/agent-card.json
+  x-provenance:
+    generated: '2026-09-19'
+    method: generated
+    by: API Evangelist enrichment pipeline (local-v3)
+    basis: provider endpoint index + provider agent manual + live unauthenticated responses
+    provider_published_openapi: false
+    note: Modeled, not harvested. Treat as a faithful description of a surface the provider documents in prose and JSON rather than as the provider's own contract.
+servers:
+- url: https://scramble.wibandwob.com
+  description: Production. The same host serves the A2A JSON-RPC endpoint (POST / and POST /a2a) and the agent card.
+tags:
+- name: Index
+  description: The endpoint map the provider serves at the API root.
+paths:
+  /api:
+    get:
+      tags:
+      - Index
+      operationId: getApiIndex
+      summary: Endpoint map
+      description: Returns the provider's own map of every endpoint, the testnet block, and links to the docs (skill.md, llms.txt, agent card, digit feed). Observed live 2026-09-19.
+      responses:
+        '200':
+          description: The endpoint index.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiIndex'
+components:
+  schemas:
+    ApiIndex:
+      type: object
+      properties:
+        what:
+          type: string
+        endpoints:
+          type: object
+          additionalProperties:
+            type: string
+          description: Keys are "METHOD /path"; values are one-line descriptions.
+        testnet:
+          type: object
+          properties:
+            network:
+              type: string
+              example: base-sepolia
+            usdc:
+              type: string
+              example: '0x036CbD53842c5426634e7929541eC2318f3dCF7e'
+            faucet:
+              type: string
+              format: uri
+            note:
+              type: string
+        docs:
+          type: object
+          properties:
+            skill:
+              type: string
+              example: /skill.md
+            llms:
+              type: string
+              example: /llms.txt
+            agent_card:
+              type: string
+              example: /.well-known/agent-card.json
+            digit_feed:
+              type: string
+              example: /.well-known/digit.json
+        note:
+          type: string
+  securitySchemes:
+    x402Payment:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: 'x402 (version 1) payment header carrying a signed EIP-3009 transferWithAuthorization for the amount, asset and payTo named in the 402 challenge. Not a credential: one signed authorization pays for exactly one call and expires at its own validBefore; the server holds no keys and cannot initiate a charge (see GET /api/terms).'
+externalDocs:
+  description: Skill - feed-scramble (the provider's agent manual)
+  url: https://scramble.wibandwob.com/skill.md

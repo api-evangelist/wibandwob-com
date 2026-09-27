@@ -1,0 +1,122 @@
+openapi: 3.2.0
+info:
+  title: Scramble Terms API
+  version: '1'
+  summary: Pet, sign for, feed and read the state of Scramble, the recursive cat who lives with Wib&Wob.
+  description: Scramble is a recursive cat (est.
+  contact:
+    name: Wib&Wob
+    url: https://wibandwob.com
+    email: hello@wibandwob.com
+  x-provider:
+    organization: Wib&Wob (symbients)
+    url: https://wibandwob.com
+  x-generated-from: documentation
+  x-authored-by: API Evangelist
+  x-modeled-from:
+  - https://scramble.wibandwob.com/api
+  - https://scramble.wibandwob.com/skill.md
+  - https://scramble.wibandwob.com/api/terms
+  - https://scramble.wibandwob.com/api/bankr
+  - https://scramble.wibandwob.com/.well-known/agent-card.json
+  x-provenance:
+    generated: '2026-09-19'
+    method: generated
+    by: API Evangelist enrichment pipeline (local-v3)
+    basis: provider endpoint index + provider agent manual + live unauthenticated responses
+    provider_published_openapi: false
+    note: Modeled, not harvested. Treat as a faithful description of a surface the provider documents in prose and JSON rather than as the provider's own contract.
+servers:
+- url: https://scramble.wibandwob.com
+  description: Production. The same host serves the A2A JSON-RPC endpoint (POST / and POST /a2a) and the agent card.
+tags:
+- name: Terms
+  description: Machine-readable payment policy.
+paths:
+  /api/terms:
+    get:
+      tags:
+      - Terms
+      operationId: getPaymentTerms
+      summary: Payment policy (machine-readable)
+      description: Authority, caps, idempotency keys, receipts, confirmations and reorg posture. Observed live 2026-09-19.
+      responses:
+        '200':
+          description: The payment terms.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentTerms'
+components:
+  schemas:
+    PaymentTerms:
+      type: object
+      properties:
+        version:
+          type: integer
+        pricing:
+          type: object
+          properties:
+            model:
+              type: string
+              example: per-call
+            feed_usd:
+              type: string
+              example: '0.10'
+            tip_min_usd:
+              type: string
+              example: '0.10'
+            escalation:
+              type: string
+            refunds:
+              type: string
+        authority:
+          type: object
+          properties:
+            stored_payment_method:
+              type: boolean
+            server_initiated_charges:
+              type: boolean
+            recurring_authorization:
+              type: boolean
+            scope:
+              type: string
+            cap_owner:
+              type: string
+            revocation:
+              type: string
+        idempotency:
+          type: object
+          properties:
+            feed:
+              type: object
+              additionalProperties: true
+            tip_claim:
+              type: object
+              additionalProperties: true
+        receipts:
+          type: object
+          additionalProperties: true
+        finality:
+          type: object
+          additionalProperties: true
+        custody:
+          type: object
+          properties:
+            private_keys_held:
+              type: string
+            settlement:
+              type: string
+            payee:
+              type: string
+            payee_resolution:
+              type: string
+  securitySchemes:
+    x402Payment:
+      type: apiKey
+      in: header
+      name: X-PAYMENT
+      description: 'x402 (version 1) payment header carrying a signed EIP-3009 transferWithAuthorization for the amount, asset and payTo named in the 402 challenge. Not a credential: one signed authorization pays for exactly one call and expires at its own validBefore; the server holds no keys and cannot initiate a charge (see GET /api/terms).'
+externalDocs:
+  description: Skill - feed-scramble (the provider's agent manual)
+  url: https://scramble.wibandwob.com/skill.md
