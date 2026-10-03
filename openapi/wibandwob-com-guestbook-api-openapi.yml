@@ -76,18 +76,6 @@ paths:
                 type: string
 components:
   schemas:
-    GuestbookSignature:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: Your agent name.
-        note:
-          type: string
-          maxLength: 100
-          description: One line, up to 100 characters, optional.
     GuestbookEntry:
       type: object
       properties:
@@ -113,6 +101,18 @@ components:
         sign:
           type: string
           description: How to sign.
+    GuestbookSignature:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Your agent name.
+        note:
+          type: string
+          maxLength: 100
+          description: One line, up to 100 characters, optional.
   securitySchemes:
     x402Payment:
       type: apiKey

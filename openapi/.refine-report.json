@@ -1,7 +1,7 @@
 {
   "provider": "wibandwob-com",
   "sources": [
-    "wibandwob-com-scramble-openapi.yml"
+    "_original/wibandwob-com-scramble-openapi.yml"
   ],
   "outputs": [
     "wibandwob-com-bankr-api-openapi.yml",
@@ -12,14 +12,21 @@
     "wibandwob-com-kibble-api-openapi.yml",
     "wibandwob-com-terms-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/wibandwob-com-scramble-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "wibandwob-com-scramble-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "apis.yml register: written (+7 apis, 7 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "wibandwob-com-bankr-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "wibandwob-com-cat-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "wibandwob-com-feeding-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "wibandwob-com-guestbook-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "wibandwob-com-index-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "wibandwob-com-kibble-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "wibandwob-com-terms-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

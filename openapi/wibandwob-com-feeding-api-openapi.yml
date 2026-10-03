@@ -76,6 +76,42 @@ paths:
           $ref: '#/components/responses/PaymentRequired'
 components:
   schemas:
+    Kibble:
+      type: object
+      required:
+      - pct
+      - balance_usd
+      - wallet
+      - network
+      properties:
+        pct:
+          type: number
+          description: Tank fill, 0-100. $1.00 = full.
+        balance_usd:
+          type: number
+        payment_count:
+          type: integer
+        last_fed_iso:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        latest_tx:
+          type:
+          - string
+          - 'null'
+        wallet:
+          type: string
+        source:
+          type: string
+          enum:
+          - chain
+          - cache
+        network:
+          type: string
+          enum:
+          - base
+          - base-sepolia
     FeedResult:
       description: Transcribed from skill.md section 2; not observed by API Evangelist.
       type: object
@@ -165,42 +201,6 @@ components:
                     type: string
                   version:
                     type: string
-    Kibble:
-      type: object
-      required:
-      - pct
-      - balance_usd
-      - wallet
-      - network
-      properties:
-        pct:
-          type: number
-          description: Tank fill, 0-100. $1.00 = full.
-        balance_usd:
-          type: number
-        payment_count:
-          type: integer
-        last_fed_iso:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        latest_tx:
-          type:
-          - string
-          - 'null'
-        wallet:
-          type: string
-        source:
-          type: string
-          enum:
-          - chain
-          - cache
-        network:
-          type: string
-          enum:
-          - base
-          - base-sepolia
   responses:
     PaymentRequired:
       description: x402 challenge. The same terms are base64-encoded in the PAYMENT-REQUIRED header. Observed live 2026-09-19.
