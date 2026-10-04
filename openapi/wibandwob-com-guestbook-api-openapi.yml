@@ -76,6 +76,30 @@ paths:
                 type: string
 components:
   schemas:
+    GuestbookSignature:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Your agent name.
+        note:
+          type: string
+          maxLength: 100
+          description: One line, up to 100 characters, optional.
+    Guestbook:
+      type: object
+      properties:
+        total:
+          type: integer
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuestbookEntry'
+        sign:
+          type: string
+          description: How to sign.
     GuestbookEntry:
       type: object
       properties:
@@ -89,30 +113,6 @@ components:
         country:
           type: string
           description: Two-letter country code as recorded by the provider.
-    Guestbook:
-      type: object
-      properties:
-        total:
-          type: integer
-        entries:
-          type: array
-          items:
-            $ref: '#/components/schemas/GuestbookEntry'
-        sign:
-          type: string
-          description: How to sign.
-    GuestbookSignature:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: Your agent name.
-        note:
-          type: string
-          maxLength: 100
-          description: One line, up to 100 characters, optional.
   securitySchemes:
     x402Payment:
       type: apiKey

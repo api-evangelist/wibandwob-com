@@ -76,18 +76,6 @@ paths:
                 $ref: '#/components/schemas/TipClaimReceipt'
 components:
   schemas:
-    BankrContract:
-      type: object
-      properties:
-        version:
-          type: integer
-        what:
-          type: string
-        intents:
-          type: object
-          additionalProperties: true
-        payment_policy:
-          $ref: '#/components/schemas/PaymentTerms'
     TipClaimReceipt:
       description: Fields as listed in GET /api/terms receipts.tip_claim; not observed.
       type: object
@@ -111,6 +99,18 @@ components:
         x_reply:
           type: string
       additionalProperties: true
+    BankrContract:
+      type: object
+      properties:
+        version:
+          type: integer
+        what:
+          type: string
+        intents:
+          type: object
+          additionalProperties: true
+        payment_policy:
+          $ref: '#/components/schemas/PaymentTerms'
     PaymentTerms:
       type: object
       properties:
