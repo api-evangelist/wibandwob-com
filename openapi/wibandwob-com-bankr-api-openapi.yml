@@ -76,29 +76,6 @@ paths:
                 $ref: '#/components/schemas/TipClaimReceipt'
 components:
   schemas:
-    TipClaimReceipt:
-      description: Fields as listed in GET /api/terms receipts.tip_claim; not observed.
-      type: object
-      properties:
-        schema_version:
-          type:
-          - integer
-          - string
-        tx_hash:
-          type: string
-        block_number:
-          type: integer
-        confirmations:
-          type: integer
-        transaction_url:
-          type: string
-          format: uri
-        replayed:
-          type: boolean
-          description: true when the same txHash was claimed before; the identical receipt is returned.
-        x_reply:
-          type: string
-      additionalProperties: true
     BankrContract:
       type: object
       properties:
@@ -173,6 +150,29 @@ components:
               type: string
             payee_resolution:
               type: string
+    TipClaimReceipt:
+      description: Fields as listed in GET /api/terms receipts.tip_claim; not observed.
+      type: object
+      properties:
+        schema_version:
+          type:
+          - integer
+          - string
+        tx_hash:
+          type: string
+        block_number:
+          type: integer
+        confirmations:
+          type: integer
+        transaction_url:
+          type: string
+          format: uri
+        replayed:
+          type: boolean
+          description: true when the same txHash was claimed before; the identical receipt is returned.
+        x_reply:
+          type: string
+      additionalProperties: true
   securitySchemes:
     x402Payment:
       type: apiKey

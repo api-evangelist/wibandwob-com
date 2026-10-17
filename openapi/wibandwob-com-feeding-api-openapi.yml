@@ -75,47 +75,34 @@ paths:
         '402':
           $ref: '#/components/responses/PaymentRequired'
 components:
+  responses:
+    PaymentRequired:
+      description: x402 challenge. The same terms are base64-encoded in the PAYMENT-REQUIRED header. Observed live 2026-09-19.
+      headers:
+        PAYMENT-REQUIRED:
+          description: Base64 JSON of the challenge body.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentRequired'
+          example:
+            error: X-PAYMENT header is required
+            accepts:
+            - scheme: exact
+              network: base
+              maxAmountRequired: '100000'
+              resource: https://scramble.wibandwob.com/api/feed
+              mimeType: application/json
+              payTo: '0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74'
+              maxTimeoutSeconds: 300
+              asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
+              extra:
+                name: USD Coin
+                version: '2'
+            x402Version: 1
   schemas:
-    FeedResult:
-      description: Transcribed from skill.md section 2; not observed by API Evangelist.
-      type: object
-      properties:
-        ok:
-          type: boolean
-        purr:
-          type: string
-        mood:
-          type: string
-        message:
-          type: string
-        petting:
-          type: object
-          properties:
-            warmth:
-              type: string
-            tail:
-              type: string
-            purr_hz:
-              type: number
-        receipt:
-          type: object
-          properties:
-            id:
-              type: string
-              description: Your EIP-3009 nonce - the idempotency key.
-            payer:
-              type: string
-            amount_base_units:
-              type: string
-            settled:
-              type: boolean
-            settlement_tx:
-              type: string
-            transaction_url:
-              type: string
-              format: uri
-        kibble:
-          $ref: '#/components/schemas/Kibble'
     PaymentRequired:
       type: object
       required:
@@ -165,6 +152,46 @@ components:
                     type: string
                   version:
                     type: string
+    FeedResult:
+      description: Transcribed from skill.md section 2; not observed by API Evangelist.
+      type: object
+      properties:
+        ok:
+          type: boolean
+        purr:
+          type: string
+        mood:
+          type: string
+        message:
+          type: string
+        petting:
+          type: object
+          properties:
+            warmth:
+              type: string
+            tail:
+              type: string
+            purr_hz:
+              type: number
+        receipt:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Your EIP-3009 nonce - the idempotency key.
+            payer:
+              type: string
+            amount_base_units:
+              type: string
+            settled:
+              type: boolean
+            settlement_tx:
+              type: string
+            transaction_url:
+              type: string
+              format: uri
+        kibble:
+          $ref: '#/components/schemas/Kibble'
     Kibble:
       type: object
       required:
@@ -201,33 +228,6 @@ components:
           enum:
           - base
           - base-sepolia
-  responses:
-    PaymentRequired:
-      description: x402 challenge. The same terms are base64-encoded in the PAYMENT-REQUIRED header. Observed live 2026-09-19.
-      headers:
-        PAYMENT-REQUIRED:
-          description: Base64 JSON of the challenge body.
-          schema:
-            type: string
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PaymentRequired'
-          example:
-            error: X-PAYMENT header is required
-            accepts:
-            - scheme: exact
-              network: base
-              maxAmountRequired: '100000'
-              resource: https://scramble.wibandwob.com/api/feed
-              mimeType: application/json
-              payTo: '0x55c1186ceC287387f9e2c7C8aBD2323a21E88e74'
-              maxTimeoutSeconds: 300
-              asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
-              extra:
-                name: USD Coin
-                version: '2'
-            x402Version: 1
   securitySchemes:
     x402Payment:
       type: apiKey
